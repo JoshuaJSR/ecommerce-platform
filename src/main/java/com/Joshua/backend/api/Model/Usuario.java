@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -17,18 +19,31 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
 
+    @Column(name = "nombreUsuario")
     @NotBlank
     private String nombreUsuario;
 
+
     @NotBlank
     @Email
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String correo;
 
     @NotBlank
     @JsonIgnore
     @Size(min = 8)
+    @Column(name = "password", nullable = false, unique = false)
     private String password;
+
+    @Column(name = "")
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "usuario_roles",
+            joinColumns = @JoinColumn(name = "idUsuario"),
+            inverseJoinColumns = @JoinColumn(name = "idRol")
+    )
+    private Set<Rol> roles = new HashSet<>();
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaRegistro;
